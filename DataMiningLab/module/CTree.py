@@ -112,6 +112,13 @@ class TreeNode:
         else:
             return
         
+    def copy(self,root1,root2):
+        nodes = [x for x in root1.att_childs]
+        for nn in nodes:
+            newnode = TreeNode(nn.node_type,nn.att_class,[],nn.att_freq,nn.att_level,nn.att_tm,root2)
+            root2.att_childs.append(newnode)
+            self.copy(nn,newnode)
+        return
 
 class ETree:
     def __init__(self):
