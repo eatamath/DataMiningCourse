@@ -33,6 +33,7 @@ class TreeNode:
         self.att_level = level
         self.att_tm = tm
         self.att_parent = parent if parent is not None else self
+        self.is_speed = False
         return
     
     def out(self):
@@ -82,16 +83,16 @@ class TreeNode:
     def get_max_freq(self):
         if self.node_type=='root':
             c = self.att_childs
-            return max(c,key=lambda x:x.att_freq).att_freq
-        else:
-            raise Exception('not root')
+            if len(c):
+                return max(c,key=lambda x:x.att_freq).att_freq
+        return 0
 
     def get_avg_freq(self):
         if self.node_type=='root':
             all_nodes = self.get_all_childs()
-            return np.mean(list(map(lambda x:x.att_freq,all_nodes)))
-        else:
-            raise Exception('not root')
+            if len(all_nodes):
+                return np.mean(list(map(lambda x:x.att_freq,all_nodes)))
+        return 0
         
     def get_node_size(self):
         if self.node_type=='root':
@@ -119,7 +120,19 @@ class TreeNode:
             root2.att_childs.append(newnode)
             self.copy(nn,newnode)
         return
-
+    
+    def speed(self):
+        self.is_speed = True
+        self.search = {x.att_class:x for x in self.get_all_nodes()}
+        return
+    
+    def find_class(self,sclass):
+        if self.is_speed:
+            return self.search[sclass]
+        else:
+            return None
+        
+        
 class ETree:
     def __init__(self):
         self.root = TreeNode(nodeType='root')
